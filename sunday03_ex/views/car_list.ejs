@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/views/car_list.ejs</title>
+</head>
+<body>
+    <h1>자동차 목록</h1>
+    <%
+        for(var i=0; i < carArr.length; i++) {
+            var car = carArr[i];
+    %>
+    <p> <%=car.name%> | <%=car.price%> | <%= car.company %> </p>
+    <%  
+        }
+    %>
+</body>
+</html>

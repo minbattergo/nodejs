@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/views/user_list.ejs</title>
+</head>
+<body>
+    <h1>사용자 목록</h1>
+    <hr>
+    <% 
+        for(var i=0; i < userArr.length; i++) {
+            var user = userArr[i];
+    %>
+        <p><%=user.id%> | <a href="/process/detail?id=<%=user.id%>"><%=user.name%></a></p>
+    <%
+        }//end of for
+    %>
+</body>
+</html>
