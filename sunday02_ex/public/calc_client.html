@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/public/calc_client.html</title>
+</head>
+<body>
+    <h1>NodeJS 웹 계산기</h1>
+    <form>
+        <input type="text" name="val1"><br>
+        <input type="text" name="val2"> <br>
+        <select name="oper" id="oper">
+            <option value="plus">plus</option>
+            <option value="minus">minus</option>
+        </select>
+    
+        <input type="submit" value="Result">
+    </form>
+    
+    <script>
+        var calForm = document.forms[0];
+        calForm.onsubmit = function(){
+            event.preventDefault(); //링크 동작 일시 정지 시킨다.
+            
+            //var var1 = this.val1.value() != "" ? this.val1.value() : alert('항을 넣으세요');
+            var var1 = this.val1.value;
+            var var2 = this.val2.value;
+            var oper = this.oper.value;
+            
+            var urlStr = "/calc/" + oper + "/" +var1 + "/" + var2;
+            //this.mothod = "post";
+            this.action = urlStr;
+            this.submit();
+            //location.url = urlStr;
+            //return false;
+        };
+    </script>
+</body>
+</html>

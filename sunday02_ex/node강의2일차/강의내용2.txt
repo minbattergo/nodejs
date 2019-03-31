@@ -1,0 +1,29 @@
+
+netstat -ano  => 윈도우 프로세스 보기 
+
+taskkill /pid 14520 /F => 프로세스 강제 종료 /F : 강제종료 옵션
+
+=> nodemon : node서버 변경적용 자동 재실행
+     google nodemon 사용법 검색
+
+=> npm install nodemon -g : 설치
+    nodemon npm start => 시작
+    nodemon 작업파일명 ex) nodemon .\
+
+==================================
+firebase login
+
+
+# firebase deploy
+# firebase deploy --only hosting => hosting만 적용
+
+
+firebase serve --only hosting,function
+//로컬호스트 테스트 서버 만든다
+
+//https://firebase.google.com/docs/database/web/read-and-write?hl=ko
+실시간 데이타 베이스 관련 사용법
+
+firebase deploy --only hosting,functions
+
+RESTFULL - get, post, delete, put 웹명령어

@@ -1,0 +1,194 @@
+[[ 구글 Firebase에서 Nodejs 사용하기 ]]
+
+명령어 툴 설치
+npm i -g firebase-tools
+firebase --version
+
+
+파이어베이스 프로젝트 폴더 초기화
+firebase login
+firebase init hosting
+
+
+파이어베이스  functions 폴더 설치
+firebase init functions (처음 firebase init 할때 functions 체크 했다면 생략)
+cd functions
+npm install firebase-admin --save
+npm i express --save
+npm install consolidate --save
+npm install ejs --save
+cd ..
+
+
+
+
+코드 편집기를 열어서 확인 해 보면 public 폴더와 functions 폴더가 보임 - 동적 설정을 위해서는 functions 폴더가 필요 함.
+funcitons 폴더의 index.js 파일 수정
+
+const functions = require('firebase-functions');
+const express = require('express');
+const app = express();
+app.get('/timestamp', (request, response) => {
+     response.send(`${Date.now()}`);
+});
+      exports.app = functions.https.onRequest(app);
+
+
+firebase.json 파일 수정
+timestamp 경로의 url과 앱의 이름이 매핑 되도록 설정.
+{
+  "hosting": {
+    "public": "public",
+    "rewrites": [
+      {
+        "source": "/timestamp",
+        "function": "app"
+      }
+    ]
+  }
+}
+
+
+파이어 베이스에 서비스할 에뮬레이터를 실행하고 로컬에서 테스트 한다.
+firebase serve --only functions,hosting   (주의: functions,hosting 붙일것)
+웹브라우저 주소창에 http://localhost:5000/timestamp 입력하면 결과 확인 가능.
+
+
+파이어베이스 서버에 올리기 위해 캐쉬 설정을 추가한다.
+서버가 원거리에 있을 경우 응답 시간이 오래 걸리는것을 해결하기 위해 캐쉬 설정을 한다.
+사용자의 컴퓨터의 얼마나 오래 머무를지 CDN은 얼마나 오래 유지 할지를 설정.
+결과는 서버에 접속해서 크롬 개발자 도두의 네트워크 탭에서 응답시간 확인 가능.
+const functions = require('firebase-functions');
+const express = require('express');
+
+const app = express();
+app.get('/timestamp', (request, response) => {
+    response.send(`${Date.now()}`);
+});
+
+app.get('/timestamp-cached', (request, response) => {
+    response.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    response.send(`${Date.now()}`);
+});
+
+exports.app = functions.https.onRequest(app);
+
+7. 배포하기 전에 firebase.json 수정
+redo나 rewrite를 해야 한다.
+"source" 키 값을 "**"로 쓰면 모든 경로 사용 가능
+
+{
+  "hosting": {
+    "public": "public",
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "app"
+      }
+    ]
+  }
+}
+
+파이어베이스 서버 호스팅에 배포
+firebase deploy
+파이어베이스 호스팅 URL을 복사해서 브라우저로 결과 확인.
+
+
+functions 폴더 안에 실제 서비스 할 views 폴더 생성하고 index.ejs 파일 생성
+Express 뷰 엔진을 사용하기 위해 handlebars용 뷰엔진 설치
+cd functions
+npm install ejs --save
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<%
+    //var cars = [{name:'SM5',price:3000,year:1999,company:'SAMSUNG'},{name:'SM7',price:5000,year:2013,company:'SAMSUNG'}]
+%>
+   <h1>자동차 목록</h1>
+   <table>
+<%
+    for(var i in cars) {
+%>
+        <tr>
+            <td><%=cars[i].name%></td>
+            <td><%=cars[i].price%></td>
+            <td><%=cars[i].year%></td>
+            <td><%=cars[i].company%></td>
+        </tr>
+
+<%
+    }
+%>
+    </table>
+</body>
+</html>
+
+
+index.js 파일 수정
+consolidate 엔진 생성 및 설정
+
+const functions = require('firebase-functions');
+const firebase = require('firebase-admin');
+const express = require('express');
+const engines = require('consolidate');
+const ejs = require('ejs');
+const fs = require('fs');
+
+
+const app = express();
+
+app.get('/home', (request, response) => {
+    response.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+
+    fs.readFile('./views/index.ejs', 'utf8', function(error, data) {
+        response.writeHead(200, {'Content-Type':'text/html'});
+        response.end(ejs.render(data,{cars:[{name:'SM3',price:2000,year:1999,company:'SAMSUNG'},{name:'SM9',price:6000,year:2013,company:'SAMSUNG'}]}));
+    })   
+});
+
+exports.app = functions.https.onRequest(app);
+
+
+
+
+
+
+
+파이어 베이스에 서비스할 에뮬레이터를 실행하고 로컬에서 테스트 한다.
+firebase serve --only functions,hosting   (주의: functions,hosting 붙일것)
+웹브라우저 주소창에 http://localhost:5000/home 입력하면 결과 확인 가능.
+초기 정적 페이지가 보이게 된다.
+동적 페이지가 보이게 하려면 public 폴더의 index.html을 수정 해 주어야 한다.
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+<script>
+    location.href="home";
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+서버에 재 배포
+firebase deploy
+
+배포 시 에러가 발생하면 package.js 파일을 확인하고 다시 배포한다
+npm install
+firebase deploy
+/functions/package.js 파일

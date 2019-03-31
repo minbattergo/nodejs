@@ -1,0 +1,65 @@
+
+
+echo "# nodejsEx" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/minbattergo/nodejsEx.git
+git remote add origin https://github.com/minbattergo/nodejs.git
+git push -u origin master
+
+git config --global user.email "you@example.com"
+
+git ????
+https://rogerdudler.github.io/git-guide/index.ko.html
+
+git rm --cached *
+git commit -m "message"
+git push -u origin master
+
+nodejs ???
+ - ? ??? ??? (??????? Node.js? ???)
+
+//[[[[[[[[[[[ Mongo Database ?? ]]]]]]]]]]]]]]]]]]
+db.users.update({id:'user01'}, {$set:{name:'???'}});
+
+> db
+test
+> use local
+switched to db local
+> db
+local
+> db.users.insert({name:'?????',age:21});
+WriteResult({ "nInserted" : 1 })
+> db.user.find();
+> db.users.find();
+{ "_id" : ObjectId("5ca0369b2d6d54fbc7611e27"), "name" : "?????", "age" : 21 }
+> db.users.drop();
+true
+> db
+local
+> db.getCollentionNames();
+2019-03-31T12:42:30.566+0900 E QUERY    [js] TypeError: db.getCollentionNames is not a function :
+@(shell):1:1
+> db.getCollectionNames();
+[ "startup_log" ]
+> swhtiched to db local
+2019-03-31T12:42:57.397+0900 E QUERY    [js] SyntaxError: missing ; before statement @(shell):1:10
+> use local;
+switched to db local
+> db
+local
+> db.users.insert({name:'?', age:22'});
+2019-03-31T12:43:37.997+0900 E QUERY    [js] SyntaxError: unterminated string literal @(shell):1:33
+> db.user.find();
+> db.users.find();
+> db.users.insert({name:'?????',age:25});
+WriteResult({ "nInserted" : 1 })
+> db.users.find();
+{ "_id" : ObjectId("5ca037a42d6d54fbc7611e28"), "name" : "?????", "age" : 25 }
+> db.getCollectionNmaes();
+2019-03-31T12:45:03.197+0900 E QUERY    [js] TypeError: db.getCollectionNmaes is not a function :
+@(shell):1:1
+> db.getCollectionNames();
+[ "startup_log", "users" ]
+>

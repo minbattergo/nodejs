@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/view/login_ok.ejs</title>
+</head>
+<body>
+    <h2>로그인 정보 확인 EJS 페이지</h2>
+    <%
+        // 자바스크립트 문법 적용
+        var infoStr = `사용자: ${user.id}, 비밀번호:${user.pass}`;
+    %>
+    <p>정보내용 : <%=infoStr %> </p>
+</body>
+</html>

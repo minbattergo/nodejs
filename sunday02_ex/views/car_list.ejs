@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/view/car_list.ejs</title>
+</head>
+<body>
+    <h1>자동차 목록</h1>
+    <ul>
+    <%
+       for(let car of carlist) {
+    %>
+    <li><h2>자동차명 : <%= car.name %>   </h2></li>
+    <li><h2>가격     : <%= car.price %>   </h2></li>
+    <li><h2>제조사   : <%= car.company %> </h2></li> <br>
+    <% 
+     }
+    %>
+    </ul>
+</body>
+</html>
