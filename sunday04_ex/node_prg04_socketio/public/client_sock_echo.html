@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/public/client_sock_echo.html</title>
+    <script src="js/socket.io.min.js"></script>
+    <script>
+        var socket;
+        
+        window.onload = function() {
+            //1st
+            socket = io.connect('http://localhost:3000');
+            
+            //4st
+            socket.on('msg_by_server', function(data){
+                console.log('msg_by_server >>> ', data);
+            });
+            
+            //2st
+            socket.on('connect', function(){
+                //3st
+                sendMessage();
+            });
+        }
+        
+        var sendMessage = function(){
+            socket.emit('msg', 'msg from client');
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

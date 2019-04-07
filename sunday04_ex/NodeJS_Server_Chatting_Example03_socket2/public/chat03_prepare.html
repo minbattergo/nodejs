@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>chat01.html</title>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script>
+        var host;
+        var port;
+        var socket;
+        
+        function println(data) {
+            console.log(data);
+            $('#result').append(data);
+        }
+        
+        function connectToServer() {
+            console.log('connectToServer ...');
+            
+            var options = {'forceNew':true};
+            var url = 'http://'+ host +':'+port;
+            console.log('url => ' + url);
+            socket = io.connect(url, options);
+            
+            socket.on('connect', function() {
+                println('웹 소켓 서버에 연결되었습니다. : ' + url);
+                
+                //// 서버로 부터 전달된 메세지 받기
+                socket.on('message', function(message) {
+                    println('Client >>> ' + JSON.stringify(message));
+                    
+                    var msgStr = "<p>수신 메세지 >>> ";
+                    msgStr += message.sender + ", ";
+                    msgStr += message.recepient + ", ";
+                    msgStr += message.command + ", ";
+                    msgStr += message.type + ", ";
+                    msgStr += message.data + "</p>";
+                    println( msgStr );
+                });
+            });
+            
+            socket.on('disconnect', function() {
+               println('웹 소켓 연결이 종료되었습니다.');
+            });
+        }
+        
+        $(function() {
+            $("#connectButton").bind('click', function(event) {
+                println('connectButton이 클릭되었습니다.');
+                
+                host = $('#hostInput').val();
+                port = $('#portInput').val();
+                
+                connectToServer();
+            });
+            
+            // 전송 버튼 클릭 시 처리
+            $("#sendBtn").bind('click', function(event) {
+                var sender = $('#senderInput').val();
+                var recepient = $('#recepientInput').val();
+                var data = $('#dataInput').val();
+
+                var output = {sender:sender, recepient:recepient, command:'chat', type:'text', data:data};
+                console.log('서버로 보낼 데이터 : ' + JSON.stringify(output));
+
+                if (socket == undefined) {
+                    alert('서버에 연결되어 있지 않습니다. 먼저 서버에 연결하세요.');
+                    return;
+                }
+
+                socket.emit('message', output);
+            });
+        });
+    </script>
+</head>
+<body>
+   
+   <h1>채팅 클라이언트 01</h1>
+   <br>
+   <div>
+       <input type="text" id="hostInput" value="localhost">
+       <input type="text" id="portInput" value="3000">
+       <input type="button" id="connectButton" value="연결하기">
+    </div>
+    
+    <div>
+        <table border="1" cellspacing="0" cellpadding="4">
+            <tr>
+                <th>보내는 사람 ID </th>
+                <td><input type="text" id="senderInput" value="test01"></td>
+            </tr>
+            <tr>
+                <th>받는 사람 ID </th>
+                <td><input type="text" id="recepientInput" value="All"></td>
+            </tr>
+            <tr>
+                <th>메세지 데이터 </th>
+                <td><input type="text" id="dataInput" value="안녕!"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="button" id="sendBtn" value="전송"></td>
+            </tr>
+        </table>
+    </div>
+    
+    <hr/>
+    
+    <p>결과: </p>
+    <div id="result"></div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="js/socket.io.min.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:3000');
+        socket.on('connect', function(){
+            console.log('서버에 연결 됨....');
+        });
+        
+        socket.on('user connected', function(){
+            console.log('Clietn user connected 브로드케스트 메시지 받음 !!');
+        });
+        
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/public/calc.html</title>
+</head>
+<body>
+    <h1> NodeJS를 활용한 계산기 프로그램 </h1>
+    <form>
+        <input type="number" name="a">
+        <input type="number" name="b">
+        <select name="oper">
+            <option value="plus">plus</option>
+            <option value="minus">minus</option>
+            <option value="multi">multi</option>
+            <option value="div">div</option>
+        </select>
+        <input type="submit" value="result">
+    </form>
+    <hr> 
+    <div id='result'>결과: </div>
+    
+    <script>
+        var form = document.forms[0];
+        console.log(form);
+        form.onsubmit = function(){
+            event.preventDefault(); //일시정지 this.submit() 하기 전까지 이동 하지 않음.
+            
+            if(this.a.value == "" ) {
+                alert('a항을 입력하세요.');
+                this.a.focus();
+                return;
+            }
+            
+            if(this.b.value == "" ) {
+                alert('b항을 입력하세요.');
+                this.a.focus();
+                return;
+            }
+            
+            var aValue = this.a.value;
+            var bValue = this.b.value;
+            var op = this.oper.value;
+            var url = "http://localhost:8888/"+op+"/"+aValue+"/"+bValue;
+            
+            console.log(url);
+            
+            var xhr = new XMLHttpRequest();
+            console.log(xhr);
+            
+            xhr.onreadystatechange = function() {
+                if(this.readyState==4 && this.status==200) {
+                    console.log(this.responseText);
+                    
+                    var result = document.getElementById("result");
+                    result.innerHTML = "결과: " + this.responseText;
+                }
+            };
+            
+            xhr.open("GET",url,true);
+            xhr.send();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/public/count.html</title>
+</head>
+<body>
+   
+    <div id="result"></div>
+    
+    <script>
+        var url="http://localhost:3000/count";
+        var xhr= new XMLHttpRequest();
+        
+        xhr.onreadystatechange = function() {
+            var result = document.getElementById('result');
+            
+            if(this.readyState==4 && this.status==200){
+                var resObj = JSON.parse(this.responseText);
+                result.innerHTML = "시간 : " + resObj.dateStr + "<br>";
+                result.innerHTML += "카운트 : " + resObj.count;
+            }
+        };
+        
+        xhr.open("GET",url,true);
+        xhr.send();
+    </script>
+</body>
+</html>

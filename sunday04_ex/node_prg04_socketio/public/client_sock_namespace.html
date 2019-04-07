@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/public/client_socket</title>
+    <script src='js/socket.io.min.js'></script>
+    <script>
+        var chat =io.connect('http://localhost:3000/chat');
+        var news =io.connect('http://localhost:3000/news');
+        
+        chat.on('socket message', function(msg){
+            console.log("socket recieve >>> ", msg);
+        });
+        
+        chat.on('chat message', function(msg){
+            console.log("chat recieve >>> ", msg);
+        });
+        
+        chat.on('connect', function(msg){
+            chat.emit('hi',"chat hi~");
+        });
+
+        news.on('connect', function(msg){
+            news.emit('hi',"news hi~");
+        });
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

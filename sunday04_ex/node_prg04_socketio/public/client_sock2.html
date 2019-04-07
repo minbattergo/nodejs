@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/public/client_socket2.html</title>
+    <script src="js/socket.io.min.js"></script>
+    <script>
+        var socket=io.connect('http://localhost:3000');
+        socket.on('this', function(data){
+            console.log(data);
+            
+            socket.emit('private message', data, 'hello');
+        });
+        
+        setTimeout(function(){
+            console.log('3초후 소켓닫기')
+            socket.close();
+        }, 3000);
+        
+        socket.on('user disconnected', function(){
+            console.log('client user disconnected');
+        });
+    </script>
+</head>
+<body>
+    <h1></h1>
+    
+    
+    
+</body>
+</html>
