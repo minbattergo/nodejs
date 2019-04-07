@@ -3,3 +3,6 @@ npm i cors --save
 broadcast = 나를제외한 접속한 client
 io.sockets = 전체이벤트
 socket = 접속한 client
+
+aws, 애저
+가상머신 : 독호
